@@ -5,13 +5,13 @@ import os
 import subprocess
 
 
-def get_plugin_list(self):
+def get_plugin_list():
     return [
         "wifi",
     ]
 
 
-def get_plugin(self, name):
+def get_plugin(name):
     if name == "wifi":
         return _PluginObject()
     else:
@@ -53,11 +53,11 @@ class _PluginObject:
             return False
 
     def interface_disappear(self, ifname):
-        self._stopHostapd(ifname)
+        if ifname in self.hostapdProcDict:
+            self._stopHostapd(ifname)
 
     def _runHostapd(self, wlanIntf):
         if len(self.wifiNetworks) == 0:
-            self.hostapdProcDict[wlanIntf] = None
             return
 
         cfgFile = os.path.join(self.tmpDir, "hostapd-%s.conf" % (wlanIntf))
@@ -106,9 +106,8 @@ class _PluginObject:
         cfgFile = os.path.join(self.tmpDir, "hostapd-%s.conf" % (ifname))
         pidFile = os.path.join(self.tmpDir, "hostapd-%s.pid" % (ifname))
 
-        if self.hostapdProcDict[ifname] is not None:
-            self.hostapdProcDict[ifname].terminate()
-            self.hostapdProcDict[ifname].wait()
+        self.hostapdProcDict[ifname].terminate()
+        self.hostapdProcDict[ifname].wait()
         del self.hostapdProcDict[ifname]
 
         if os.path.exists(cfgFile):
