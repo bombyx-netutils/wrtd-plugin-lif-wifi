@@ -45,6 +45,9 @@ class _PluginObject:
         for ifname in self.hostapdProcDict.keys():
             self._stopHostapd(ifname)
 
+    def get_bridge(self):
+        return None
+
     def interface_appear(self, ifname):
         if ifname.startswith("wl"):
             self._runHostapd(ifname)
