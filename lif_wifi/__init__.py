@@ -20,10 +20,9 @@ def get_plugin(name):
 
 class _PluginObject:
 
-    def init2(self, instanceName, cfg, brname, tmpDir):
+    def init2(self, instanceName, cfg, tmpDir, varDir):
         assert instanceName == ""
         self.cfg = cfg
-        self.brname = brname
         self.tmpDir = tmpDir
 
         self.wifiNetworks = []
@@ -48,9 +47,9 @@ class _PluginObject:
     def get_bridge(self):
         return None
 
-    def interface_appear(self, ifname):
+    def interface_appear(self, bridge, ifname):
         if ifname.startswith("wl"):
-            self._runHostapd(ifname)
+            self._runHostapd(bridge.get_name(), ifname)
             return True
         else:
             return False
@@ -59,7 +58,7 @@ class _PluginObject:
         if ifname in self.hostapdProcDict:
             self._stopHostapd(ifname)
 
-    def _runHostapd(self, wlanIntf):
+    def _runHostapd(self, brname, wlanIntf):
         if len(self.wifiNetworks) == 0:
             return
 
@@ -69,7 +68,7 @@ class _PluginObject:
         # generate hostapd configuration file
         buf = ""
         buf += "interface=%s\n" % (wlanIntf)
-        buf += "bridge=%s\n" % (self.brname)
+        buf += "bridge=%s\n" % (brname)
         buf += "\n"
         buf += "# hardware related configuration\n"
         buf += self._genWlanAdapterHwCfg(wlanIntf, True)
