@@ -20,7 +20,7 @@ def get_plugin(name):
 
 class _PluginObject:
 
-    def init2(self, instanceName, cfg, tmpDir, varDir):
+    def init2(self, instanceName, cfg, tmpDir, varDir, firewallAllowFunc):
         assert instanceName == ""
         self.cfg = cfg
         self.tmpDir = tmpDir
