@@ -20,7 +20,7 @@ def get_plugin(name):
 
 class _PluginObject:
 
-    def init2(self, instanceName, cfg, tmpDir, varDir, firewallAllowFunc):
+    def init2(self, instanceName, cfg, tmpDir, varDir):
         assert instanceName == ""
         self.cfg = cfg
         self.tmpDir = tmpDir
@@ -43,9 +43,6 @@ class _PluginObject:
     def stop(self):
         for ifname in self.hostapdProcDict.keys():
             self._stopHostapd(ifname)
-
-    def get_bridge(self):
-        return None
 
     def interface_appear(self, bridge, ifname):
         if ifname.startswith("wl"):
