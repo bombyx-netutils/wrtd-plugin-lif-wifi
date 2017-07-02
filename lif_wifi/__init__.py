@@ -2,6 +2,7 @@
 # -*- coding: utf-8; tab-width: 4; indent-tabs-mode: t -*-
 
 import os
+import logging
 import subprocess
 
 
@@ -24,6 +25,7 @@ class _PluginObject:
         assert instanceName == ""
         self.cfg = cfg
         self.tmpDir = tmpDir
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.wifiNetworks = []
         for o in self.cfg:
@@ -38,15 +40,18 @@ class _PluginObject:
         self.hostapdProcDict = dict()
 
     def start(self):
-        pass
+        self.logger.info("Started.")
 
     def stop(self):
         for ifname in self.hostapdProcDict.keys():
             self._stopHostapd(ifname)
+            self.logger.info("Interface \"%s\" unmanaged." % (ifname))
+        self.logger.info("Stopped.")
 
     def interface_appear(self, bridge, ifname):
         if ifname.startswith("wl"):
             self._runHostapd(bridge.get_name(), ifname)
+            self.logger.info("Interface \"%s\" managed." % (ifname))
             return True
         else:
             return False
@@ -54,6 +59,7 @@ class _PluginObject:
     def interface_disappear(self, ifname):
         if ifname in self.hostapdProcDict:
             self._stopHostapd(ifname)
+            self.logger.info("Interface \"%s\" unmanaged." % (ifname))
 
     def _runHostapd(self, brname, wlanIntf):
         if len(self.wifiNetworks) == 0:
@@ -100,6 +106,7 @@ class _PluginObject:
                 os.unlink(cfgFile)
             if os.path.exists(pidFile):
                 os.unlink(pidFile)
+            raise
 
     def _stopHostapd(self, ifname):
         cfgFile = os.path.join(self.tmpDir, "hostapd-%s.conf" % (ifname))
