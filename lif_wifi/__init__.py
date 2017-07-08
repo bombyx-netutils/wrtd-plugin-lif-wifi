@@ -29,7 +29,7 @@ class _PluginObject:
 
         self.wifiNetworks = []
         for o in self.cfg:
-            t = WrtConfigWifiNetwork()
+            t = _WrtConfigWifiNetwork()
             t.ssid = o["ssid"]
             if "password" in o:
                 t.password = o["password"]
@@ -137,7 +137,7 @@ class _PluginObject:
         return buf
 
 
-class WrtConfigWifiNetwork:
+class _WrtConfigWifiNetwork:
 
     def __init__(self):
         self.ssid = None
