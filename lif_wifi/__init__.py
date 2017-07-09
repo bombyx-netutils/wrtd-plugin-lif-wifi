@@ -43,7 +43,7 @@ class _PluginObject:
         self.logger.info("Started.")
 
     def stop(self):
-        for ifname in self.hostapdProcDict.keys():
+        for ifname in list(self.hostapdProcDict.keys()):        # self.hostapdProcDict changed in loop
             self._stopHostapd(ifname)
             self.logger.info("Interface \"%s\" unmanaged." % (ifname))
         self.logger.info("Stopped.")
