@@ -1,0 +1,10 @@
+[
+    {
+        "ssid": "wifi_1",
+        "password": "abcd",
+    },
+    {
+        "ssid": "wifi_2",
+        "password": "abcd",
+    },
+]
